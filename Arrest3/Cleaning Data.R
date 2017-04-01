@@ -21,7 +21,8 @@ for(n in 1:length(y6)){
   i=i+1
   code[i]<-substr(arrest$OFFENSES[n],1,y6[n]-1)
 }
-arrest<-data.frame(arrest$AGE,arrest$GENDER,arrest$OFFENSES,arrest$RACE,code)
+shortcode<-code
+arrest<-data.frame(arrest$AGE,arrest$GENDER,arrest$ARRESTTIME,arrest$OFFENSES,arrest$RACE,code,shortcode)
 
 y1<-regexpr("[(]",arrest$code)
 idx1<-which(y1>0)
@@ -49,9 +50,32 @@ arrest1$code<-code2
 arrest2<-arrest[-idx2,]
 arrest<-rbind(arrest1,arrest2)
 
-sort(table(arrest$code), decreasing = TRUE)[1:10]
-idx3<-which(arrest$code==2701|arrest$code==13|arrest$code==903|arrest$code==2702|arrest$code==9501|arrest$code==9015|arrest$code==1543|arrest$code==3925|arrest$code==2706|arrest$code==3929)
-ArrestTopTen<-arrest[idx3,]
+idx5<-which(arrest$code==13)
+arrest$code[idx5]<-"13(a)"
+arrest$shortcode<-arrest$code
 
-idx4<-which(arrest$code==2701|arrest$code==13|arrest$code==903|arrest$code==2702|arrest$code==9501)
-ArrestTopFive<-arrest[idx4,]
+idx6<-which(nchar(arrest$shortcode)==3)
+idx7<-which(nchar(arrest$shortcode)==4)
+
+arrest$shortcode[idx6]<-substr(arrest$shortcode[idx6],1,1) 
+arrest$shortcode[idx7]<-substr(arrest$shortcode[idx7],1,2) 
+arrest<-na.omit(arrest)
+table(arrest$arrest.AGE)
+
+idx8<-which(arrest$arrest.AGE==0|arrest$arrest.AGE==999)
+arrest<-arrest[-idx8,]
+
+idx9<-which(arrest$shortcode=="27"|arrest$shortcode=="13(a)"|arrest$shortcode=="9"|arrest$shortcode=="39")
+ArrestTopFour<-arrest[idx9,]
+sort(table(ArrestTopFour$shortcode))
+
+library(lubridate)
+table(year(ArrestTopFour$arrest.ARRESTTIME))
+
+idx10<-which(year(ArrestTopFour$arrest.ARRESTTIME)==2014)
+ArrestTopFour<-ArrestTopFour[-idx10,]
+sort(table(ArrestTopFour$shortcode))
+
+ArrestTopFour<-data.frame(ArrestTopFour$arrest.AGE,ArrestTopFour$arrest.GENDER,ArrestTopFour$arrest.RACE,ArrestTopFour$arrest.OFFENSES,ArrestTopFour$code,ArrestTopFour$shortcode)
+
+colnames(ArrestTopFour)<-c("AGE","GENDER","RACE","OFFENSE","CODE","SHORTCODE")
