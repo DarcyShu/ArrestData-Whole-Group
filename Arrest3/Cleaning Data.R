@@ -1,6 +1,6 @@
 rm(list=ls())
 setwd("C:/Users/dengj/Desktop/2016-2017 Spring/R/data")
-dat=read.csv("ArrestDataFinal.csv")
+dat=read.csv("ArrestData.csv")
 y<-regexpr("/",dat$OFFENSES)
 idx<-which(y>0)
 offense<-NULL
