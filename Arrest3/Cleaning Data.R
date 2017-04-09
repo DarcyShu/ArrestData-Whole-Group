@@ -208,4 +208,7 @@ ArrestTeen$ShortCode[idx8]<-substr(ArrestTeen$ShortCode[idx8],1,2)
 #Get Unique ShortCode for EACH One Offender
 ArrestTeen1<-distinct(ArrestTeen,ID,AGE,GENDER,RACE,ArrestTime,Hour,Month,Weekday,ShortCode)
 
-
+#write CSV
+setwd("C:/Users/dengj/Desktop/2016-2017 Spring/R/data")
+write.csv(ArrestTeen,"C:/Users/dengj/Desktop/2016-2017 Spring/R/data/ArrestTeen.csv")
+write.csv(ArrestTeen1,"C:/Users/dengj/Desktop/2016-2017 Spring/R/data/ArrestTeen1.csv")
