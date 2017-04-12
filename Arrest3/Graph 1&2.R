@@ -108,6 +108,7 @@ a<-ggplot(dat=ArrestTeen,aes(x=ArrestTeen$ShortCode,fill=Gender))
 a+geom_bar(stat="count")+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   xlab("Short Offense Code")+
+  geom_text(stat="count",aes(label=..count..), check_overlap = TRUE,position = position_stack(vjust = 0.5),size=3)+
   ggtitle("Distribution of All Crime Types Among Teenagers")   
 
 
@@ -129,6 +130,7 @@ b<-ggplot(dat=AgeTopCrime,aes(x=AgeTopCrime$AGE,fill=Weekday))
 b+geom_bar(stat="count")+
   xlab("Age")+
   scale_fill_brewer(palette = "Blues")+
+  geom_text(stat="count",aes(label=..count..),check_overlap = TRUE,size=3,position = position_stack(vjust = 0.5),angle=45)+
   scale_x_continuous(breaks=c(10,12,15,18,21))+
   facet_grid(.~AgeTopCrime$ShortCode)+
   ggtitle("Top 2 Crimes Among Teenagers")
@@ -138,6 +140,7 @@ c<-ggplot(dat=AgeTopCrime,aes(x=agegroup,fill=Weekday))
 c+geom_bar(stat="count")+
   xlab("Age")+
   scale_fill_brewer(palette = "Blues")+
+  geom_text(stat="count",aes(label=..count..),check_overlap = TRUE,size=3,position = position_stack(vjust = 0.5),angle=45)+
   facet_grid(.~AgeTopCrime$ShortCode)+
   ggtitle("Top 2 Crimes Among Teenagers")
 
