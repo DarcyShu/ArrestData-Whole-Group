@@ -36,6 +36,7 @@ p+geom_bar(stat = "identity",fill="#2171B5")+xlab("")+ylab("")+
   theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
   geom_hline(aes(yintercept=mean(N)), colour="Black", linetype="dashed",cex=1)
 View(dat)
+
 #13(a),drug issues
 dat2<-teen1%>%
   filter(ShortCode=="13(a)") %>%
@@ -59,22 +60,55 @@ ggplot(newdat, aes(x=factor(day), y=count, colour=type,group=type)) + geom_line(
 
 #Overall by time
 View(dat)
-dat<-teen1 %>%
+dat<-teen %>%
   select(Hour,Month,Weekday,ShortCode) %>% 
   group_by(Hour) %>% 
   summarize(N=n())
 p<-ggplot(dat,aes(x=Hour,y=N))
-p<-p+geom_bar(stat = "identity",fill="#084594", alpha=.5)+xlab("")+ylab("")+
-  ggtitle("")+
+p+geom_bar(stat = "identity",fill="#084594")+xlab("")+ylab("")+
+  ggtitle("24H Juvenile Delinquency")+
+  theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
+geom_line(size=1.5,color="#FF0088")+geom_point(size=4,color="#FF0088")
+
+
+### 27 by time
+dat<-teen %>%
+  select(Hour,Month,Weekday,ShortCode) %>% 
+  filter(ShortCode==27) %>% 
+  group_by(Hour) %>% 
+  summarize(N=n())
+p<-ggplot(dat,aes(x=Hour,y=N))
+p+geom_bar(stat = "identity",fill="#2171B5")+xlab("")+ylab("")+
+  ggtitle("24H Juvenile Delinquency \n                  Assault")+
   theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())
-p+geom_line(data=dat,aes(x=Hour,y=N),colour="pink",size=2)
 
-brewer.pal(3,"Set1")
+### 13(a) by time
+dat<-teen %>%
+  select(Hour,Month,Weekday,ShortCode) %>% 
+  filter(ShortCode=="13(a)") %>% 
+  group_by(Hour) %>% 
+  summarize(N=n())
+p<-ggplot(dat,aes(x=Hour,y=N))
+p+geom_bar(stat = "identity",fill="#4292C6")+xlab("")+ylab("")+
+  ggtitle("24H Juvenile Delinquency \n            Drug Issues")+
+  theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())
 
+brewer.pal(7,"Blues")
 #barplot of age distribution FILLED by gender or race
 #1. pure age distribution
-p<-ggplot(data=teen,aes(x=AGE))
-p+geom_bar()
+p<-ggplot(data=teen1,aes(x=AGE))
+p+geom_bar(fill="#084594")+ggtitle("")+
+  theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())
+### 27
+p<-ggplot(data=teen1[teen$ShortCode==27,],aes(x=AGE))
+p+geom_bar(fill="#2171B5")+ggtitle("Assault")+
+  theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())
+###13(a)
+p<-ggplot(data=teen1[teen$ShortCode=="13(a)",],aes(x=AGE))
+p+geom_bar(fill="#4292C6")+ggtitle("Drug Issues")+
+  theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())
+
+
 #2. filled by gender
 p<-ggplot(data=teen,aes(x=AGE))
 p+geom_bar(aes(fill=GENDER))
@@ -83,6 +117,7 @@ p<-ggplot(data=teen,aes(x=AGE))
 p+geom_bar(aes(fill=RACE))
 
 #divide age into three groups: 10-13(middle school),14-18(high school),19-21(University Student OR else)
+teen1<-teen
 teen1$AGE<-ifelse(teen$AGE<=13,"10-13",ifelse(teen$AGE>18,"19-21","14-18"))
 ####By month
 dat3<-teen1 %>%
@@ -97,14 +132,6 @@ p+geom_bar(stat = "identity",fill="#C6DBEF")+xlab("")+ylab("")+
   ggtitle("")+
   theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
   geom_hline(aes(yintercept=mean(N)), colour="Dark Grey", linetype="dashed",cex=1)
-
-
-brewer.pal(7,"Blues")
-
-View(dat)
-p<-ggplot(teen1,aes(x=Weekday))
-p+geom_bar()+geom_density(aes(y=table(Weekday)))
-
 
 #distribution of teen crime cases (time continuous)
 table(teen$Month)
@@ -153,7 +180,7 @@ for (z in c) {
   }
 }
 
-levels(m$Day)<-c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
+m$Day<-factor(m$Day,levels=c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"))
 p<-ggplot(data=m,aes(x=Day,y=Age,fill=Count))+geom_tile(color="grey", size=0.02)
 p+theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
  scale_fill_gradient2('Assault Cases',low = 'white', high ="#2980B9")+
@@ -197,19 +224,10 @@ for (z in c) {
     u<-data.frame(Day,Age,Count)
   }
 }
-levels(u$Day)<-c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
+u$Day<-factor(u$Day,levels=c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"))
 p<-ggplot(data=u,aes(x=Day,y=Age,fill=Count))+geom_tile(color="grey", size=0.02)
 p+theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
   scale_fill_gradient2('Drug Issues',low = 'white', high ="#2980B9")+
   geom_text(aes(label = Count))
-
-
-
-
-
-
-
-
-
 
 
