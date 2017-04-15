@@ -126,3 +126,9 @@ plotbygender<-function(x){
     theme(panel.background = element_rect(colour="Black")) +scale_fill_brewer(palette = 'Set1')}
 plotbygender(four)
 
+##
+ggplot(data=datgraph,aes(x=AGE,fill=RACE)) + 
+  geom_bar(data=subset(datgraph,RACE=="B")) + 
+  geom_bar(data=subset(datgraph,RACE=="W"),aes(y=..count..*(-1))) + 
+  scale_y_continuous(breaks=seq(-200,200,40),labels=abs(seq(-200,200,40))) + 
+  coord_flip()
