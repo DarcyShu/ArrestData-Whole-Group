@@ -116,6 +116,7 @@ dat=read.csv("ArrestDataFinal.csv")
 
 #Data Recleaning
 
+library(lubridate)
 idx<-which(dat$AGE<=21&dat$AGE>0)
 dat1<-dat[idx,]
 idx1<-which(year(dat1$ARRESTTIME)==2014|year(dat1$ARRESTTIME)==2015)
@@ -212,3 +213,24 @@ ArrestTeen1<-distinct(ArrestTeen,ID,AGE,GENDER,RACE,ArrestTime,Hour,Month,Weekda
 setwd("C:/Users/dengj/Desktop/2016-2017 Spring/R/data")
 write.csv(ArrestTeen,"C:/Users/dengj/Desktop/2016-2017 Spring/R/data/ArrestTeen.csv")
 write.csv(ArrestTeen1,"C:/Users/dengj/Desktop/2016-2017 Spring/R/data/ArrestTeen1.csv")
+
+
+
+#Data Cleaning Rewite
+rm(list=ls())
+setwd("C:/Users/dengj/Desktop/2016-2017 Spring/R/data")
+dat=read.csv("ArrestDataFinal.csv")
+
+#as.date  Extract only the crimes happening in 2016&2017
+library(lubridate)
+idx<-which(year(dat$ARRESTTIME)==2014|year(dat$ARRESTTIME)==2015)
+dat<-dat[-idx,]
+
+#Remove Outliers
+idx1<-which(dat$AGE>0 & dat$AGE<100)
+dat<-dat[idx1,]
+
+#Creat Binary Variable
+Arrest<-data.frame(dat$X_id,dat$AGE,dat$GENDER,dat$RACE,dat$ARRESTTIME,dat$OFFENSES)
+Arrest$TENN<-Arrest$dat.AGE<22
+table(Arrest$TENN)
