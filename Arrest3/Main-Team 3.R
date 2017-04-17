@@ -153,10 +153,6 @@ c+geom_bar(stat="count")+
 
 
 # Graph 2.3 & 2.4: Vincent Fan
-rm(list=ls())
-setwd("C:/Users/yacheng/Desktop/Courses/2nd semester/R/Final project/Group5 Data Visulization/ArrestData-Whole-Group")
-teen<-read.csv("ArrestTeen.csv")
-
 #library useful packages
 library(ggplot2)
 library(reshape2)
@@ -357,4 +353,58 @@ p<-ggplot(data=u,aes(x=Day,y=Age,fill=Count))+geom_tile(color="grey", size=0.02)
 p+theme_classic()+theme(axis.ticks = element_blank(),axis.line = element_blank())+
   scale_fill_gradient2('Drug Issues',low = 'white', high ="#2980B9")+
   geom_text(aes(label = Count))
+
+
+#Revise 2nd edition: boxplot+line chart
+teen<-read.csv("ArrestTeenForVincent.csv")
+View(teen)
+a<-c("Saturday","Sunday")
+dat<-teen %>%
+  select(AGE,GENDER,RACE,Weekday,ShortCode) %>%
+  group_by(Weekday) %>%
+  summarize(N=n()) %>%
+  mutate(type=ifelse(Weekday %in% a,"Weekend","Weekday"))
+View(dat)
+mean(dat$N[dat$type=="Weekend"])
+mean(dat$N[dat$type=="Weekday"])
+p<-ggplot(dat,aes(x=factor(type),y=N,fill = factor(type)))
+p+geom_boxplot(pch=3,cex=1)+ggtitle("Juvenile delinquency")+xlab("")+ylab("Number of Cases") +
+  theme(legend.title=element_blank())+
+  scale_fill_discrete(labels=c("Weekday", "Weekend"))+
+  geom_segment(aes(x = 0, y = 114.4583, xend = 1, yend = 114.4583),colour="black",linetype="dashed",cex=1)+
+  geom_segment(aes(x = 0, y = 28.16667, xend = 2, yend = 28.16667),colour="black",linetype="dashed",cex=1)+
+  annotate("text", x=2, y=28.16667, label= "28",size=5,colour="white")+
+  annotate("text", x=1, y=114.4583, label= "114",size=5,colour="white")+
+  annotate("text", x=2.2, y=-1, label= "Vincent Fan",size=2)
+
+
+# Comparison between weekday and weekend
+dat1<-teen %>%
+  filter(Weekday %in% a) %>%
+  select(AGE,GENDER,RACE,Hour,Weekday) %>%
+  group_by(Hour) %>%
+  summarize(N=n(),type="Weekend")
+
+dat2<-teen %>%
+  filter(!(Weekday %in% a)) %>%
+  select(AGE,GENDER,RACE,Hour,Weekday) %>%
+  group_by(Hour) %>%
+  summarize(N=n(),type="Weekday")
+
+write.csv(dat1,"dat1.csv")
+write.csv(dat2,"dat2.csv")
+
+#Revise 3rd edition: stack map tracing the trend
+dat<-read.csv("dat1.csv")
+View(dat)
+p<-ggplot(dat,aes(x=Hour,y=N,colour=type))
+p+geom_line(aes(group=type),size=1.5)+geom_point(aes(group=type,shape=type),size=3)+ylab("Number of Cases") +
+  theme(legend.title=element_blank())+scale_x_continuous(limits = c(0, 23),breaks = 0:23)+
+  ggtitle("Juvenile delinquency")+
+  geom_segment(aes(x = 13, y = 0, xend = 13, yend = 339),colour="red",linetype="dashed",cex=1)+
+  geom_segment(aes(x = 16, y = 0, xend = 16, yend = 377),colour="red",linetype="dashed",cex=1)+
+  geom_segment(aes(x = 17, y = 0, xend = 17, yend = 374),colour="red",linetype="dashed",cex=1)+
+  geom_segment(aes(x = 1, y = 0, xend = 1, yend = 210),colour="red",linetype="dashed",cex=1)+
+  geom_segment(aes(x = 2, y = 0, xend = 2, yend = 150),colour="#00BFC4",linetype="dashed",cex=1)+
+  annotate("text", x=21, y=-5, label= "Vincent Fan",size=2)
 
